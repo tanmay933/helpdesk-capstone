@@ -1,0 +1,3 @@
+aws_region  = "ap-south-1"
+cluster_name = "helpdesk-eks"
+environment = "dev"

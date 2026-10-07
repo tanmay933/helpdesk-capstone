@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helpdesk.fullname" . }}-backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {app: helpdesk-backend}
+  template:
+    metadata:
+      labels: {app: helpdesk-backend}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: backend
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          image: "{{ .Values.backend.image }}:{{ .Values.backend.tag }}"
+          ports: [{containerPort: 8000}]
+          envFrom:
+            - configMapRef:
+                name: {{ include "helpdesk.fullname" . }}-config
+            - secretRef:
+                name: {{ include "helpdesk.fullname" . }}-backend-secret
+          readinessProbe:
+            httpGet: {path: /ready, port: 8000}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /health, port: 8000}
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          resources:
+{{ toYaml .Values.resources | indent 12 }}

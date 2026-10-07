@@ -1,0 +1,10 @@
+frontend:
+  image: ghcr.io/YOUR_ORG/helpdesk-frontend
+backend:
+  image: ghcr.io/YOUR_ORG/helpdesk-backend
+replicaCount: 2
+ingress:
+  enabled: true
+  host: helpdesk.example.com
+hpa:
+  enabled: true

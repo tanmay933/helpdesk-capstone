@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helpdesk
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tanmay933/DevOps-Class.git
+    targetRevision: main
+    path: session21-python/helm/helpdesk
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helpdesk
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

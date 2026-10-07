@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: helpdesk-broken-image, namespace: helpdesk}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: broken-image}}
+  template:
+    metadata: {labels: {app: broken-image}}
+    spec:
+      containers: [{name: backend, image: ghcr.io/example/helpdesk-backend:does-not-exist}]

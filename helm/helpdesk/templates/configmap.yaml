@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "helpdesk.fullname" . }}-config
+data:
+  APP_NAME: "HelpDesk API"
+  LOG_LEVEL: "INFO"

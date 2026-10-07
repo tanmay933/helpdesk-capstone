@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helpdesk.backend.fullname" . }}
+  labels: {app: helpdesk-backend}
+spec:
+  selector: {app: helpdesk-backend}
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http

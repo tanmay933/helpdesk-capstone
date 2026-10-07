@@ -1,0 +1,143 @@
+name: HelpDesk DevSecOps CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  test:
+    name: Test and Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend dependencies
+        run: pip install -r requirements.txt
+        working-directory: backend
+      - name: Run pytest
+        run: pytest -q
+        working-directory: backend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build frontend
+        run: npm install && npm run build
+        working-directory: frontend
+
+  sast:
+    name: SAST - CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript, python
+      - uses: github/codeql-action/analyze@v3
+
+  dependency-scan:
+    name: SCA - Dependency Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python dependency scan
+        run: |
+          python -m pip install --upgrade pip pip-audit
+          pip-audit -r backend/requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Frontend dependency scan
+        run: npm install && npm audit --audit-level=high
+        working-directory: frontend
+
+  secret-scan:
+    name: Secret Scan - Gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-scan-push:
+    name: Build, Scan and Push Images
+    needs: [test, sast, dependency-scan, secret-scan]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build images
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/helpdesk-backend:${{ github.sha }} ./backend
+          docker build -t ghcr.io/${{ github.repository_owner }}/helpdesk-frontend:${{ github.sha }} ./frontend
+      - name: Scan backend image
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: ghcr.io/${{ github.repository_owner }}/helpdesk-backend:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+      - name: Scan frontend image
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: ghcr.io/${{ github.repository_owner }}/helpdesk-frontend:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+      - name: Push images
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/helpdesk-backend:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository_owner }}/helpdesk-frontend:${{ github.sha }}
+
+  deploy:
+    name: Kubernetes Helm Deployment
+    # Deployment is optional until KUBE_CONFIG_DATA is configured; CI/build/security remain green.
+    if: github.ref == 'refs/heads/main'
+    env:
+      KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+    needs: build-scan-push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: Configure kubectl
+        if: ${{ env.KUBE_CONFIG_DATA != '' }}
+        run: |
+          test -n "$KUBE_CONFIG_DATA"
+          mkdir -p ~/.kube
+          echo "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
+      - name: Deploy with Helm
+        if: ${{ env.KUBE_CONFIG_DATA != '' }}
+        run: |
+          helm upgrade --install helpdesk ./helm/helpdesk \
+            -n helpdesk --create-namespace \
+            --set backend.tag=${{ github.sha }} \
+            --set frontend.tag=${{ github.sha }} \
+            --set backend.image=ghcr.io/${{ github.repository_owner }}/helpdesk-backend \
+            --set frontend.image=ghcr.io/${{ github.repository_owner }}/helpdesk-frontend \
+            --wait --timeout 5m

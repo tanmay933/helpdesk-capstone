@@ -1,0 +1,6 @@
+replicaCount: 2
+ingress:
+  enabled: true
+  host: helpdesk.local
+hpa:
+  enabled: false
