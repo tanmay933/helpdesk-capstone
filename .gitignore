@@ -16,3 +16,9 @@ venv/
 test.db
 .env.local
 terraform.tfvars
+
+# Terraform generated files
+*.tfplan
+*.tfstate
+*.tfstate.*
+.terraform/

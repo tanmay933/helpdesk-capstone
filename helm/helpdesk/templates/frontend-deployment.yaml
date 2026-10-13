@@ -25,6 +25,7 @@ spec:
             capabilities:
               drop: [ALL]
           image: "{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}"
+          imagePullPolicy: {{ .Values.frontend.pullPolicy | default "IfNotPresent" }}
           ports:
             - containerPort: 8080
           readinessProbe:

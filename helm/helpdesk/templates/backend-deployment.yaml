@@ -21,6 +21,7 @@ spec:
             capabilities:
               drop: [ALL]
           image: "{{ .Values.backend.image }}:{{ .Values.backend.tag }}"
+          imagePullPolicy: {{ .Values.backend.pullPolicy | default "IfNotPresent" }}
           ports: [{containerPort: 8000}]
           envFrom:
             - configMapRef:

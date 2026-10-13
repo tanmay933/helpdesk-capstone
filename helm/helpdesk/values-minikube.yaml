@@ -1,0 +1,38 @@
+frontend:
+  image: helpdesk-frontend
+  tag: latest
+  pullPolicy: Never
+
+backend:
+  image: helpdesk-backend
+  tag: latest
+  pullPolicy: Never
+
+replicaCount: 1
+namespace: helpdesk
+imagePullSecrets: []
+
+postgres:
+  host: helpdesk-helpdesk-postgres
+  database: helpdesk
+  username: helpdesk
+  password: helpdesk
+
+ingress:
+  enabled: true
+  host: helpdesk.local
+
+hpa:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 384Mi
+
+monitoring:
+  serviceMonitor:
+    enabled: false
