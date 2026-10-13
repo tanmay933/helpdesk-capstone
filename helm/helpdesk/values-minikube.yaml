@@ -8,7 +8,7 @@ backend:
   tag: latest
   pullPolicy: Never
 
-replicaCount: 1
+replicaCount: 2
 namespace: helpdesk
 imagePullSecrets: []
 

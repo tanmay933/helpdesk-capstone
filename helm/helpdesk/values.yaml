@@ -9,7 +9,7 @@ replicaCount: 2
 namespace: helpdesk
 imagePullSecrets: []
 postgres:
-  host: helpdesk-postgres
+  host: helpdesk-helpdesk-postgres
   database: helpdesk
   username: helpdesk
   password: helpdesk
@@ -26,4 +26,4 @@ resources:
   limits: {cpu: 500m, memory: 512Mi}
 monitoring:
   serviceMonitor:
-    enabled: true
+    enabled: false

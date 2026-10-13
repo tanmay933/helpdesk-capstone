@@ -34,7 +34,7 @@ module "eks" {
   version = "20.31.6"
 
   cluster_name    = "helpdesk-eks"
-  cluster_version = "1.33"
+  cluster_version = "1.35"
 
   cluster_endpoint_public_access = true
 
