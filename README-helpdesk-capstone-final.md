@@ -4,6 +4,13 @@ HelpDesk is a full-stack support-ticket application built to demonstrate an end-
 
 **Repository:** [tanmay933/helpdesk-capstone](https://github.com/tanmay933/helpdesk-capstone)
 
+## Project Presentation
+
+**Author:** Tanmay Mittal  
+**Roll Number:** 24BCS10491
+
+[View the HelpDesk DevOps Capstone Presentation](HelpDesk-DevOps-Capstone-Presentation.pptx)
+
 > **Infrastructure status:** The AWS VPC and EKS resources created for this project were destroyed after verification to avoid ongoing cloud costs. AWS screenshots below are historical evidence from when those resources existed; they do not mean the resources are currently running.
 
 ## Contents
