@@ -19,7 +19,7 @@ HelpDesk is a full-stack support-ticket application built to demonstrate an end-
 **Presenter:** Tanmay Mittal  
 **Roll Number:** 24BCS10491
 
-[▶ Watch / Download the HelpDesk Capstone Demo](HelpDesk-Demo.mp4)
+[Download the HelpDesk Capstone Demo](HelpDesk-Demo.mp4)
 
 This demo showcases the HelpDesk application and its DevOps deployment workflow.
 
