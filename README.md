@@ -2,6 +2,16 @@
 
 HelpDesk is a full-stack support-ticket application built to demonstrate an end-to-end DevOps lifecycle: application development, testing, containerization, CI/CD, image security scanning, infrastructure as code, Kubernetes deployment, and observability.
 
+![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?style=flat-square&logo=react)
+![Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)
+![Database](https://img.shields.io/badge/Database-PostgreSQL-4169E1?style=flat-square&logo=postgresql)
+![Container](https://img.shields.io/badge/Container-Docker-2496ED?style=flat-square&logo=docker)
+![Orchestration](https://img.shields.io/badge/Orchestration-Kubernetes-326CE5?style=flat-square&logo=kubernetes)
+![IaC](https://img.shields.io/badge/IaC-Terraform-7B42BC?style=flat-square&logo=terraform)
+![Status](https://img.shields.io/badge/status-complete-brightgreen?style=flat-square)
+
+> A full-stack support-ticket application demonstrating an end-to-end DevOps lifecycle.
+
 **Repository:** [tanmay933/helpdesk-capstone](https://github.com/tanmay933/helpdesk-capstone)
 
 ## Demo Video
