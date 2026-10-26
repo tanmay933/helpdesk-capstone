@@ -19,7 +19,7 @@ HelpDesk is a full-stack support-ticket application built to demonstrate an end-
 **Presenter:** Tanmay Mittal  
 **Roll Number:** 24BCS10491
 
-[Download the HelpDesk Capstone Demo](HelpDesk-Demo.mp4)
+[Download the HelpDesk Capstone Demo](demo/HelpDesk-Demo.mp4)
 
 This demo showcases the HelpDesk application and its DevOps deployment workflow.
 
@@ -28,7 +28,7 @@ This demo showcases the HelpDesk application and its DevOps deployment workflow.
 **Author:** Tanmay Mittal  
 **Roll Number:** 24BCS10491
 
-[Download the HelpDesk DevOps Capstone Presentation](HelpDesk-DevOps-Capstone-Presentation.pptx)
+[Download the HelpDesk DevOps Capstone Presentation](demo/HelpDesk-DevOps-Capstone-Presentation.pptx)
 
 > **Infrastructure status:** The AWS VPC and EKS resources created for this project were destroyed after verification to avoid ongoing cloud costs. AWS screenshots below are historical evidence from when those resources existed; they do not mean the resources are currently running.
 
